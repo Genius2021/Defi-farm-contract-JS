@@ -1,0 +1,9 @@
+
+ 
+ {
+    "42": "kovan",
+    "4": "rinkeby",
+    "1337": "ganache-local",
+    "1": "mainnet"
+
+ }
