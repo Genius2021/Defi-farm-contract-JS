@@ -1,6 +1,8 @@
 {
   "1337": {
     "ElonToken": [
+      "0x1dfA02Eb8E0140c348f35b23de7f95B57c477634",
+      "0x8b58d245559533E01e8f07ef1555188896805d44",
       "0x6E8Bc5be19dC502189DB38F1644D142C08db80a4"
     ],
     "MockDAI": [
@@ -13,8 +15,9 @@
       "0x58D7c898126fc5cB70F0b6Fd5434cCB4f214DfC1"
     ],
     "TokenFarm": [
+      "0x5e0f24D52ef1Fc06fE699Ea5118C35caa3bb016e",
+      "0xd4D08e098232221E3A01E55CCE5321a10A1E97bA",
       "0xfD83A66D6E79b1405D9D9D87cE4eaB1f68934ae7"
     ]
   }
-  
 }

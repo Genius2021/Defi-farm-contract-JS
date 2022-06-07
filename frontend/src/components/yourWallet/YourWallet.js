@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Box, Tab } from "@material-ui/core";
-import { TabContext, TabList } from "@material-ui/lab";
+import { TabContext, TabList, TabPanel } from "@material-ui/lab";
+import WalletBalance from "./WalletBalance"
+import StakeForm from './StakeForm';
 
 
 const YourWallet = ({supportedTokens})=>{
@@ -20,6 +22,15 @@ const YourWallet = ({supportedTokens})=>{
                     })
                 }
             </TabList>
+                { supportedTokens.map((token, index) =>{
+                    return <TabPanel key={index} value={String(index)}>
+                        <div>
+                            <WalletBalance token={token} />
+                            <StakeForm token={token} />
+                        </div>
+                    </TabPanel>
+                    })
+                }
         </TabContext>
     </Box>
 }
