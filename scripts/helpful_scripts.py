@@ -43,7 +43,7 @@ def get_contract(contract_name):
                 f"{network.show_active()} address not found, perhaps you should add it to the config or deploy mocks?"
             )
             print(
-                f"brownie run scripts/deploy_mocks.py --network {network.show_active()}"
+                f"brownie run scripts/deploy.py --network {network.show_active()}"
             )
     return contract
 
@@ -59,6 +59,7 @@ def deploy_mocks(decimals=18, initial_value=INITIAL_PRICE_FEED_VALUE):
     print(f"Deployed mock price feed to {mock_price_feed.address}")
     print("Deploying Mock FAU token...")
     mock_fau_token = MockDAI.deploy({"from": account})
+    print("mock _fau token total supply is ")
     print(f"Deployed mock fau token to {mock_fau_token.address}")
     print("Deploying Mock WETH token...")
     mock_weth_token = MockWETH.deploy({"from": account})

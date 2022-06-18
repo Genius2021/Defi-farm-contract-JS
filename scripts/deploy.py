@@ -6,13 +6,21 @@ import json
 import os
 import shutil
 
-KEPT_BALANCE = Web3.toWei(100, "ether")
+KEPT_BALANCE = Web3.toWei(105, "ether")
 
 def deploy_token_farm_and_token(front_end_update=False):
     account = get_account()
+    print("Deploying Elon token...")
     elon_token = ElonToken.deploy({"from": account})
+    print("Elon token deployed...")
+    print("Elon token supply is", elon_token.totalSupply())
+    print("Deploying Token farm contract...")
     token_farm = TokenFarm.deploy(elon_token.address, {"from": account}, publish_source=config["networks"][network.show_active()].get("verify", False))
-    tx = elon_token.transfer(token_farm.address, elon_token.totalSupply() - KEPT_BALANCE, {"from": account})
+    print("Deployed Token farm contract...")
+    print("Transferring Elon token to token farm...")
+    valueTransferred = elon_token.totalSupply() - KEPT_BALANCE
+    print("Elon value transferred is", valueTransferred)
+    tx = elon_token.transfer(token_farm.address, valueTransferred, {"from": account})
     tx.wait(1)
 
     #elon_token, weth_token, fau_token/dai

@@ -4,15 +4,16 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import "../interfaces/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
 
 contract TokenFarm is Ownable{
     // address owner;
-    IERC20 public elonToken;
+    ERC20 public elonToken;
 
     constructor(address _elonTokenAddress) public{
         // owner = msg.sender;
-        elonToken = IERC20(_elonTokenAddress);
+        elonToken = ERC20(_elonTokenAddress);
     }
 
     //mapping to keep track of how much has been sent to us. Token address -> staker address -> amount staked
@@ -65,7 +66,7 @@ contract TokenFarm is Ownable{
         return (uint256(price), decimals);
     }
 
-    function stakeTokens(uint256 _amount, address _token) public {
+    function stakeTokens(uint256 _amount, address _token) public payable{
         //what tokens can they stake?
         //how much can they stake?
         require(_amount > 0, "You can only stake token amounts greater than 0");
@@ -74,7 +75,7 @@ contract TokenFarm is Ownable{
         // now, call the transferFrom function of the ERC20 contract
         //Basically, we are calling the transferFrom function since we are not the owner of the tokens to be transferred. 
         //We are only transferring the tokens on behalf of the owner of those tokens (i.e msg.sender). Otherwise we would have called just transfer function.
-        IERC20(_token).transferFrom(msg.sender, address(this), _amount);
+        ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         updateUniqueTokensState(msg.sender, _token); //This function basically helps us know how many unique tokens a user has. e.g DAI, LITECOIN which is 2 etc.
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender] + _amount; 
         if(uniqueTokensStaked[msg.sender ] == 1){
@@ -85,8 +86,8 @@ contract TokenFarm is Ownable{
     function unstakeTokens(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
         require(balance > 0, "Staking balance cannot be 0");
-        IERC20(_token).transfer(msg.sender, balance); 
         stakingBalance[_token][msg.sender] = 0; 
+        ERC20(_token).transfer(msg.sender, balance); 
         uniqueTokensStaked[msg.sender] = uniqueTokensStaked[msg.sender] - 1;
 
     }
@@ -119,5 +120,9 @@ contract TokenFarm is Ownable{
             }
         }
         return false;
+    }
+
+    function getStakingBalance(address _token, address _stakerAddress) public view returns(uint256){
+        return stakingBalance[_token][_stakerAddress];
     }
 }

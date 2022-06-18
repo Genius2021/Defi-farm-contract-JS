@@ -1,4 +1,3 @@
-import React from 'react'
 import {makeStyles} from "@material-ui/core";
 import useStakeTokens from "../hooks/useStakeTokens"
 
@@ -26,7 +25,6 @@ function BalanceMsg({label, amount, tokenImageSrc}) {
         <div>{label}</div>
         <div className={classes.amount}>{amount}</div>
         <img className={classes.tokenImg} src={tokenImageSrc}  alt="token logo" />
-        {/* <useStakeTokens /> */}
     </div>
   )
 }

@@ -19,8 +19,11 @@ export const Header =()=>{
     const {account, activateBrowserWallet, deactivate} = useEthers();
     const isConnected = account !== undefined;
 
+    const lastCharacter = account?.length 
+
     return (<div className={classes.container}>
-        <Button color="primary" variant="contained" size="small" onClick={isConnected ? ()=>deactivate() : ()=>activateBrowserWallet()}>{isConnected ? "Disconnect" : "Connect Account"}</Button>
+        { isConnected && <Button variant="contained" disableElevation size="small" >{isConnected && `${account.slice(0 , 4)}...${account.slice(lastCharacter - 4, lastCharacter)}`}</Button> }
+        <Button color="primary" variant="contained" disableElevation size="small" onClick={isConnected ? ()=>deactivate() : ()=>activateBrowserWallet()}>{isConnected ? "Disconnect" : "Connect Account"}</Button>
     </div>)
 
 }

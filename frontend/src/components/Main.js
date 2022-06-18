@@ -6,11 +6,22 @@ import { constants } from "ethers";
 import brownieConfig from "../brownie-config.json";
 import YourWallet from "./yourWallet/YourWallet";
 import { Box } from "@material-ui/core";
-import dai from "../images/dai.jpg"
-import weth from "../images/weth.jpg"
+import dai from "../images/dai.jpg";
+import weth from "../images/weth.jpg";
+import { makeStyles, Typography } from "@material-ui/core";
+import StakeInformation from "./stakeInfo/StakeInformation";
+
+const useStyles = makeStyles(theme =>({
+    title: {
+        color: theme.palette.common.white,
+        textAlign: "center",
+        padding: theme.spacing(4)
+    }
+}))
 
 
 export function Main () {
+    const classes = useStyles()
     const { chainId } = useEthers();
     const networkName = chainId ? helperConfig[String(chainId)] : "development";
     const elonTokenAddress = chainId ? networkMapping[String(chainId)]["ElonToken"][0] : constants.AddressZero;
@@ -26,24 +37,18 @@ export function Main () {
         fauTokenAddress = chainId ? brownieConfig["networks"][networkName]["fau_token"] : constants.AddressZero;
     }
 
-    console.log("weth token address is", wethTokenAddress)
-    console.log("fau token address is", fauTokenAddress)
-        
-
-    console.log("Elon token address is", elonTokenAddress)
-    console.log(chainId)
-    console.log(networkName)
-
     const supportedTokens = [
         {image: '', address: elonTokenAddress, name: "ELON"},
-        {image: weth, address: wethTokenAddress, name: "WETH"},
-        {image: dai, address: fauTokenAddress, name: "FAU"},
+        {image: weth, address: wethTokenAddress, name: "MWETH"},
+        {image: dai, address: fauTokenAddress, name: "MDAI"},
     ]
 
     return(
         <Container maxWidth="md">
             <Box>
+                <Typography variant="h1" className={classes.title}>Defi Farm</Typography>
                 <YourWallet supportedTokens={supportedTokens} />
+                <StakeInformation supportedTokens={supportedTokens} />
             </Box>
         </Container>
     )

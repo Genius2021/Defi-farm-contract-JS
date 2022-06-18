@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Box, Tab, Typography } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { Box, Button, Tab } from "@material-ui/core";
 import { TabContext, TabList, TabPanel } from "@material-ui/lab";
-import WalletBalance from "./WalletBalance";
-import StakeForm from "./StakeForm";
+import StakedAmount from "./StakedAmount";
 import { makeStyles } from "@material-ui/core";
 import { useEthers } from "@usedapp/core";
+import useUnstakeTokens from "../../hooks/useUnstakeTokens";
 
 const useStyles = makeStyles((theme) => ({
   tabContent: {
@@ -20,30 +20,31 @@ const useStyles = makeStyles((theme) => ({
   header: {
     color: "white",
   },
-  center: {
-    textAlign: "center",
-    padding: theme.spacing(2)
-}
 }));
 
-const YourWallet = ({ supportedTokens }) => {
+const StakeInformation = ({ supportedTokens }) => {
   const classes = useStyles();
   const { account } = useEthers();
   const [selectedTokenIndex, setSelectedTokenIndex] = useState(0);
 
   const {address} = supportedTokens[selectedTokenIndex]
 
-  console.log(address, selectedTokenIndex)
 
   const handleChange = (e, newValue) => {
     setSelectedTokenIndex(parseInt(newValue));
   };
 
+  const {unstakeSend, stakedBalance, state: unstakeState} = useUnstakeTokens(address)
+
+    const handleUnstake = ()=>{
+      unstakeSend(address)
+    }
+
   return (
-    <Box>
-      {account && <h2 className={classes.header}>Your Wallet Balances</h2>}
+    <Box sx={{mb:"3rem"}}>
+      {account && <h2 className={classes.header}>Stake Information</h2>}
       <Box className={classes.box}>
-        {account ? (
+        {account && (
           <TabContext value={String(selectedTokenIndex)}>
             <TabList onChange={handleChange} aria-label="stake form tabs">
               {supportedTokens.map((token, index) => {
@@ -55,22 +56,18 @@ const YourWallet = ({ supportedTokens }) => {
             {supportedTokens.map((token, index) => {
               return (
                 <TabPanel key={index} value={String(index)}>
-                  <div className={classes.tabContent}>
-                    <WalletBalance token={token} />
-                    <StakeForm token={token} />
-                  </div>
+                  <Box className={classes.tabContent}>
+                    <StakedAmount token={token} stakedBalance={stakedBalance} />
+                    <Button color="primary" variant="contained" disableElevation size="medium" onClick={handleUnstake}>Unstake</Button>
+                  </Box>
                 </TabPanel>
               );
             })}
           </TabContext>
-        ) : (
-          <Box>
-            <Typography variant="h4" gutterBottom className={classes.center}>Please connect an account.</Typography>
-          </Box>
         )}
       </Box>
     </Box>
   );
 };
 
-export default YourWallet;
+export default StakeInformation;
